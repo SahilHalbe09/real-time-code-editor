@@ -1,18 +1,14 @@
 import React, { useEffect, useRef } from "react";
-
 import Codemirror from "codemirror";
-
 import "codemirror/lib/codemirror.css";
-import "codemirror/mode/javascript/javascript";
-
 import "codemirror/theme/dracula.css";
+import "codemirror/mode/javascript/javascript";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import ACTIONS from "../Actions";
 
-function Editor({ socketRef, roomId, onCodeChange }) {
+const Editor = ({ socketRef, roomId, onCodeChange }) => {
 	const editorRef = useRef(null);
-
 	useEffect(() => {
 		async function init() {
 			editorRef.current = Codemirror.fromTextArea(document.getElementById("realtimeEditor"), {
@@ -26,9 +22,7 @@ function Editor({ socketRef, roomId, onCodeChange }) {
 			editorRef.current.on("change", (instance, changes) => {
 				const { origin } = changes;
 				const code = instance.getValue();
-
 				onCodeChange(code);
-
 				if (origin !== "setValue") {
 					socketRef.current.emit(ACTIONS.CODE_CHANGE, {
 						roomId,
@@ -37,7 +31,6 @@ function Editor({ socketRef, roomId, onCodeChange }) {
 				}
 			});
 		}
-
 		init();
 	}, []);
 
@@ -55,7 +48,7 @@ function Editor({ socketRef, roomId, onCodeChange }) {
 		};
 	}, [socketRef.current]);
 
-	return <textarea name="" id="realtimeEditor"></textarea>;
-}
+	return <textarea id="realtimeEditor"></textarea>;
+};
 
 export default Editor;
